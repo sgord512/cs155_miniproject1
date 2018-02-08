@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Feb  5 16:13:04 2018
+
+@author: lucien
+"""
+
+
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+import nltk
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import KFold
+#%% Import data
+
+#training data
+data_train=np.loadtxt('training_data.txt', skiprows=1, delimiter=' ')
+y_all=data_train[:,0]
+x_all=np.delete(data_train,0,1)
+
+
+x_train0, x_test0, y_train0, y_test0 = train_test_split(x_all, y_all,   
+                                                        test_size=0.05,
+                                                        random_state=0)
+
+
+#%%
+
+#clf = GaussianNB()
+n_splits=3
+kf = KFold(n_splits=n_splits,shuffle=True,random_state=0)
+#kf.get_n_splits(x_train0)
+sum=0
+for train_index, test_index in kf.split(x_train0):
+    x_train, x_test = x_train0[train_index], x_train0[test_index]
+    y_train, y_test = y_train0[train_index], y_train0[test_index]
+
+    #clf.fit(x_train,y_train)
+    classifier = nltk.NaiveBayesClassifier.train(x_train,y_train)
+    sum += nltk.classify.accuracy(classifier, x_test,y_test)
+    #y_pred= clf.predict(x_test)
+    #sum += accuracy_score(y_test,y_pred, normalize = True)
+
+accuracy=sum/n_splits   
+
+
+
+
+
