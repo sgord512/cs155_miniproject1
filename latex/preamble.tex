@@ -1,0 +1,156 @@
+% -----------------------------------------------
+% The preamble that follows can be ignored. Go on
+% down to the section that says "START HERE" 
+% -----------------------------------------------
+
+
+%Document style
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{26pt} 
+\fancyhead[l]{Numpty Dumpty\\California Institute of Technology}
+\cfoot{\thepage \hspace{1pt} of \pageref{LastPage}}
+
+%Packages in use
+\usepackage{
+	amsmath,
+	amsthm,
+	amssymb,
+	mathrsfs,
+	MnSymbol,
+	empheq,
+	graphics,
+	graphicx,
+	enumitem,
+	bbm,
+	xcolor,
+	tikz,
+	relsize,
+	float,
+	verbatim,
+	hyperref,
+	color,
+	courier,
+	listings,
+	datetime,
+	lastpage,
+	cite,
+	titling,
+	caption,
+	subcaption}
+
+%\usepackage[strings]{underscore} %does this help with typing underscores?
+%\usepackage{mathrsfs}
+%\usepackage{palatino}
+%\usepackage{enumitem} %alternate enuermating package [(a)]
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[framemethod=default]{mdframed}
+\usepackage[super]{nth}
+%\graphicspath{{../latexfigs/}} %specifies graphicspath
+
+\mdfdefinestyle{MyFrame}{%
+	linecolor=black,
+	outerlinewidth=5pt,
+	%roundcorner=20pt,
+	innertopmargin=5pt,
+	innerbottommargin=5pt,
+	innerrightmargin=5pt,
+	innerleftmargin=5pt,
+	leftmargin = 5pt,
+	rightmargin = 5pt
+	%backgroundcolor=gray!50!white}
+}
+
+\renewcommand{\maketitlehooka}{\begin{mdframed}[style=MyFrame]}
+\renewcommand{\maketitlehookd}{\end{mdframed}\vspace{5 mm}}
+
+
+
+
+
+%Hyperlink Setup
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=blue
+}
+
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%START_MATLAB%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+\lstset{language=Matlab,%
+	basicstyle=\small\ttfamily, %or \small or \footnotesize etc.
+	breaklines=true,%
+	morekeywords={matlab2tikz},
+	keywordstyle=\color{blue},%
+	morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+	identifierstyle=\color{black},%
+	stringstyle=\color{mylilas},
+	commentstyle=\color{mygreen},%
+	showstringspaces=false,%without this there will be a symbol in the places where there is a space
+	numbers=left,%
+	numberstyle={\tiny \color{black}},% size of the numbers
+	numbersep=9pt, % this defines how far the numbers are from the text
+	emph=[1]{for,end,break},emphstyle=[1]\color{red}, %some words to emphasise
+	%emph=[2]{word1,word2}, emphstyle=[2]{style},    
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%&&%%%%%%END_MATALB%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\setlength\parindent{0pt} %sets noindent for entire file
+
+
+
+
+%My shortcuts
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Pro}{\mathbb{P}}
+\newcommand{\Lag}{\mathscr{L}}
+\newcommand{\lm}{\lambda}
+\newcommand{\limn}{\lim_{n \rightarrow \infty}}
+\newcommand{\limN}{\lim_{N \rightarrow \infty}}
+\newcommand{\Rn}{\mathbb{R}^n}
+\newcommand{\sn}{\mathbb{S}^n}
+\newcommand{\1}{\mathbbm{1}}
+\newcommand{\ata}{A^TA}
+\newcommand{\Rmn}{\mathbb{R}^{m \times n}}
+\newcommand{\Rnn}{\mathbb{R}^{n \times n}}
+\newcommand{\Rnm}{\mathbb{R}^{n \times m}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Bias}{\operatorname{Bias}}
+\newcommand{\ba}{\[\begin{aligned}}
+\newcommand{\ea}{\end{aligned}\]}
+
+
+

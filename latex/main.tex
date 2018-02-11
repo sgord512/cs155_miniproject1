@@ -1,0 +1,259 @@
+
+% -----------------------------------------------
+% The preamble that follows can be ignored. Go on
+% down to the section that says "START HERE" 
+% -----------------------------------------------
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{preamble}
+
+
+
+\title{CMS 155 Miniproject 1 Report} 
+\author{Lucien Werner\\Spencer Gordon} 
+
+%\pagestyle{fancy}
+\fancyhead[r]{CMS/CS/EE 155\\Machine Learning \& Data Mining}
+
+
+
+
+\begin{document}
+
+
+% ------------------------------------------ %
+%                 MAKE TITLE                 %
+% ------------------------------------------ %
+\thispagestyle{empty} %keep first page plain
+\maketitle
+
+% ------------------------------------------ %
+%                 START HERE                 %
+% ------------------------------------------ %
+
+
+\section{Introduction}
+\medskip
+\begin{itemize}
+	
+	\item \textbf{Group Members:} Lucien Werner and Spencer Gordon
+	
+	\item \textbf{Team name:} Numpty Dumpy (\nth{11} place)
+	
+	\item \textbf{Division of labour} \\
+	Although we mostly did pair coding, the table below displays a rough division of tasks. 
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{l|l}
+			Task                                   & Person   \\ 
+			\hline
+			Regression \& ensemble methods coding~ & Lucien  \\
+			Neural net coding                      & Spencer  \\
+			Report writing                         & Shared  
+		\end{tabular}
+	\end{table}
+	
+	\item \textbf{List of files in submission}
+	\begin{itemize}
+		\item \texttt{regression.py}	
+		\item \texttt{adaboost.py}	
+		\item \texttt{gradientboosting.py}	
+		\item \texttt{randomforest.py}	
+		\item \texttt{naivebayes.py}
+		\item \texttt{deepnet.ipynb}	
+		
+		
+		
+		
+	\end{itemize}
+\item \textbf{GitHub repository:} \url{www.internet.com}
+\end{itemize}
+
+
+
+\section{Overview}
+\medskip
+\begin{itemize}
+	
+	\item \textbf{Models and techniques tried}\\
+	
+	We tried a range of machine learning models and used a subset of the given training set to validate and compare their performance. Tuning the hyperparameters within the model classes was the crucial element in fitting a model that obtained good performance on the public leader board. Naive methods (regression) were tried first, followed by more complex ensemble approaches. 
+	\begin{itemize}
+		\item \textbf{Logistic Regression:} Linear regression with logistic loss and regularization strength $C=0.1$ was the first thing we tried, and ultimately it gave better performance than anything besides the neural net. Fitting this model was primarily about finding the best regularization strength. Using \texttt{sklearn}'s \texttt{GridSearchCV} method, we set a range of parameters for regularization strength, solver, and max iterations to train the model over. To asses the performance of the different parameter sets, we used 5-fold cross validation of the training set. Bag-of-words data is high dimensional and sparse, indicating that some kind of regression was a good place to start the modeling. 
+		\item \textbf{Random Forest:} Random forest classifiers are good all-purpose models and if the weak classifiers are shallow enough, they train quickly as well. We tested performance using \texttt{sklearn}'s \texttt{RandomizedSearchCV} method across a range of parameters including the number of weak classifiers, min\_sample\_split, and max\_tree\_depth. 
+		\item \textbf{Gradient Boosting and AdaBoost:} Gradient boosting and AdaBoost with shallow decision trees as weak classifiers did not give better results than the random forest. After tuning the hyperparameters with randomized grid search over a subset of the parameter space, we only achieved accuracy in the low 80\% on our validation dataset. 
+		\item \textbf{Naive Bayesian Classifier:} Bayes classifiers generally train quickly on high dimensional data. We found this to be the case but the accuracy was poor. 
+		\item \textbf{Neural Network:} We attempted a 3-layer neural network with 1300 hidden units, ReLU activation, and Dropout layers between all of the hidden layers. We tuned the dropout probability of all the layers using the approach from the \nth{4} homework. This method ended up performing marginally better on our validation dataset and significantly better on the public leaderboard. 
+		\item \textbf{Data normalization:} We tried several methods to normalize the training data:
+		\begin{itemize}
+			\item TF-IDF transformation (discounts words that appear frequently in other reviews)
+			\item Logarithmic normalization ($X_i=\log(1+X_1)$) (discounts higher word counts)
+			\item Binary normalization (converts all non-zero entries to 1)
+			\item Point-wise normalization (divides every feature in a datapoint by the norm of the entire datapoint).
+		\end{itemize}
+		None of these normalization procedures improved the accuracy of our classifier, although in some cases (TF-IDF, for example) there was a significant increase in the training speed. The trade-off between accuracy and training speed was not universal across the models we tested, but we ultimately decided against normalization for our neural network.
+	\end{itemize}
+	
+	\item \textbf{Work timeline}
+	\begin{itemize}
+		\item \textbf{February 2-4:} Logistic regression
+		\item \textbf{February 5-7} Ensemble methods 
+		\item \textbf{February 8:} Neural net
+	\end{itemize}
+	
+\end{itemize}
+
+
+\section{Approach}
+\medskip
+\begin{itemize}
+	
+	\item \textbf{Data processing and manipulation}
+	\begin{itemize}
+		% Insert text here. Bullet points can be made using '\item'.
+		\item \textbf{Bullet:} Bullet text.
+	\end{itemize}
+	
+	\item \textbf{Details of models and techniques}
+	\begin{itemize}
+		% Insert text here. Bullet points can be made using '\item'.
+		\item \textbf{Bullet:} Bullet text.
+		
+		% If you would like to insert a figure, you can just use the following five lines, replacing the image path with your own and the caption with a 1-2 sentence description of what the image is and how it is relevant or useful.
+%		\begin{figure}[H]
+%			\centering
+%			\includegraphics[width=\textwidth]{smiley.png}
+%			\caption{Insert caption here.}
+%		\end{figure}
+		
+	\end{itemize}
+	
+\end{itemize}
+
+
+
+\section{Model Selection}
+\medskip
+\begin{itemize}
+	
+	\item \textbf{Scoring} 
+	We used accuracy as our scoring metric in all tests. It is defined as
+	$$
+	\text{accuracy}=\frac{\text{\# of matches}}{\text{\# of datapoints}}.
+	$$
+	When training with cross-validation, accuracy scores were averaged across folds. Our initial experiments with logistic regression set a baseline $\sim 84$\% accuracy. 
+	\item \textbf{Validation and Test} 
+	We set aside 5\% (1000 datapoints) of the training set to validate our models, separate from in-sample cross-validation during training. Scores from this validation step generally tracked closely to those subsequently attained on the public leaderboard. 
+	
+\end{itemize}
+
+
+
+\section{Conclusion}
+\medskip
+\begin{itemize}
+	
+	\item \textbf{Discoveries} 
+	We discovered that despite trying and optimizing numerous regression models, model ensembles, and hyperparameters, a neural network still gave the (marginally) best performance. It was also surprising that simple logistic regression performed nearly as well on this dataset. 
+	
+	\item \textbf{Challenges} 
+	Avoiding overfitting to the public leaderboard was on our mind as we validated the models. By setting aside 5\% of our training set to validate our model accuracy after training, we had a point of reference for the leaderboard score. Otherwise, establishing the neural net architecture was a process that felt like a lot of trial and error. Given the number of possible a structures and parameter values that are available to a neural net, it seemed like we might have landed upon something that worked well by luck. Doing this again, we would spend more time systematically testing different model structures (number of layers, activation functions, number of units per hidden layer, etc.), or alternatively considering ensembles of shallow neural nets. 
+	
+	\item \textbf{Concluding Remarks} 
+	An interesting feature of this project was that there seemed to be a fundamental limit on the performance of machine-learned models on this dataset. The scoreboard results were all clustered within a couple percentage points around 85\%. We found that most models we tried would approach this ceiling after tuning hyperparameters; in other words, the learning limit of the data seemed to be model independent. 
+	
+\end{itemize}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%START_BIBLIOGRAPHY%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\medskip
+\bibliographystyle{unsrt}
+\bibliography{biblio}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%END_BIBLIOGRAPHY%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%START_CODE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+	
+	
+\clearpage
+\section*{Appendix: Python Code}
+
+\subsection*{Problem 2}
+\lstinputlisting[language=Python]{p2.py}
+
+\end{comment}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%END CODE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\end{document}
+
+
+% -----------------------------------------------
+% Ignore everything that appears below this.
+% -----------------------------------------------
+
+
+
+
+
+%%%%%%%% Old Material
+
+% %%BEGIN BIBLIOGRAPHY++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%%
+
+% \newpage
+% \begin{thebibliography}{9}
+
+
+% \bibitem{andrewlewis} 
+% Website of Professor Andrew D. Lewis, Department of Mathematics & Statistics at Queen's University 
+% \\\texttt{http://www.mast.queensu.ca/\~andrew/erdos.shtml}
+
+
+% \bibitem{adam} 
+% Website of Professor Adam Wierman, Erd\H{o}s Number
+% \\\texttt{http://users.cms.caltech.edu/~adamw/erdosnumber.html}
+
+
+% \bibitem{erdos} 
+% The Erd\H{o}s Number Project
+% \\\texttt{https://oakland.edu/enp/}
+
+
+% \bibitem{gscholar} 
+% Google Scholar
+% \\\texttt{https://www.scholar.google.com}
+
+% \begin{comment}
+% \bibitem{latexcompanion} 
+% Michel Goossens, Frank Mittelbach, and Alexander Samarin. 
+% \textit{The \LaTeX\ Companion}. 
+% Addison-Wesley, Reading, Massachusetts, 1993.
+
+% \bibitem{einstein} 
+% Albert Einstein. 
+% \textit{Zur Elektrodynamik bewegter K{\"o}rper}. (German) 
+% [\textit{On the electrodynamics of moving bodies}]. 
+% Annalen der Physik, 322(10):891?921, 1905.
+
+% \end{comment}
+
+
+% \end{thebibliography}
+% %%END BIBLIOGRAPHY++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%%
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{p2b.eps}
+	\label{p2b}
+	\caption{Decision Tree, Gini, Maximum Tree Depth}
+\end{figure}
