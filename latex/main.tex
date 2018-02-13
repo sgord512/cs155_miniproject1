@@ -79,7 +79,7 @@
   
 \item \textbf{Models and techniques tried}\\
   
-  We tried a range of machine learning models and used a subset of the given training set to validate and compare their performance. For each model class we tried, we tuned our hyperparameters by doing a grid search and using cross-validation. We tried simpler models first (e.g., logistic regression) and moved on to more sophisticated models (e.g., enesemble methods and neural nets).
+  We tried a range of machine learning models and used a subset of the given training data to validate and compare their performance. For each model class we tried, we tuned our model hyperparameters by doing a grid search across a space of hyperparameters and using cross-validation. We tried simpler models (e.g., logistic regression) first and progressed to more sophisticated models (e.g., ensemble methods and neural nets). We avoided the temptation to overfit the model to the training data and the public leaderboard, because we thought doing so might ultimately penalize us on the private leaderboard. The sparse, high-dimensional character of our data encouraged us to experiment heavily with linear models which are well suited to such datasets and avoid support vector classifiers (SVCs) which would have been infeasible to train on such a large dataset. We also experimented with decision tree classifiers (and ensembles of them) because they are quick to train and relatively robust. Ultimately these did not prove to give the performance we sought. Neural nets were our last resort due to the difficulty in finding an optimal structure in a systematic way. To our surprise thought, this model gave incrementally better performance for us on both the public and private leaderboard than our linear models. 
   
 \item \textbf{Work timeline}
   \begin{itemize}
@@ -98,7 +98,7 @@
 \item \textbf{Data processing and manipulation:} We tried several methods to normalize the training data:
   \begin{itemize}
   \item TF-IDF transformation (discounts words that appear frequently in other reviews)
-  \item Logarithmic normalization ($X_i=\log(1+X_1)$) (discounts higher word counts)
+  \item Logarithmic normalization ($X_i=\log(1+X_i)$) (discounts higher word counts)
   \item Binary normalization (converts all non-zero entries to 1)
   \item Point-wise normalization (divides every feature in a datapoint by the norm of the entire datapoint).
   \end{itemize}
@@ -109,10 +109,10 @@
   \item \textbf{Random Forest:} Random forest classifiers are good all-purpose models and if the weak classifiers are shallow enough, they train quickly as well. We tested performance using \texttt{sklearn}'s \texttt{RandomizedSearchCV} method across a range of parameters including the number of weak classifiers, min\_sample\_split, and max\_tree\_depth. 
   \item \textbf{Gradient Boosting and AdaBoost:} Gradient boosting and AdaBoost (using \texttt{sklearn}'s \texttt{GradientBoostingClassifier} and \texttt{AdaBoostClassifier}, respectively) with shallow decision trees as weak classifiers did not give better results than the random forest. After tuning the hyperparameters with randomized grid search over a subset of the parameter space, we only achieved accuracy in the low 80\% on our validation dataset. 
   \item \textbf{Naive Bayesian Classifier:} We used \texttt{sklearn}'s \texttt{GaussianNB} classifier. Bayes classifiers generally train quickly on high dimensional data. We found this to be the case but the accuracy was poor. 
-  \item \textbf{Neural Network:} We used \textt{Keras} for all of our neural network models. We used a 3-layer neural network with up to 1300 hidden units, ReLU activation, and Dropout layers between all of the hidden layers. We tuned the dropout probability of all the layers using the approach from the \nth{4} homework. This method ended up performing marginally better on our validation dataset and significantly better on the public leaderboard. See Figure \ref{acc_vs_dropout_prob} for an illustration of the average accuracy (computed through 5-fold cross validation) for one of the models we tried. This model had 3 layers of hidden units, with 250, 100, and 50 units in order from the input layer to the output layer, each of which was followed by a ReLU activation layer and a dropout layer. 
-    \begin{figure}[H]
+  \item \textbf{Neural Network:} We used \texttt{Keras} for all of our neural network models. We used a 3-layer neural network with up to 1300 hidden units, ReLU activation, and Dropout layers between all of the hidden layers. We tuned the dropout probability of all the layers using the approach from the \nth{4} homework. This method ended up performing marginally better on our validation dataset and significantly better on the public leaderboard. See Figure \ref{acc_vs_dropout_prob} for an illustration of the average accuracy (computed through 5-fold cross validation) for one of the models we tried. This model had 3 layers of hidden units, with 250, 100, and 50 units in order from the input layer to the output layer, each of which was followed by a ReLU activation layer and a dropout layer. 
+    \begin{figure}[h]
       \centering
-      \includegraphics[scale=0.5]{accuracy_vs_dropout_prob.png}
+      \includegraphics[scale=0.7]{accuracy_vs_dropout_prob.png}
       \caption{Illustration of accuracy vs dropout probability for one neural net architecture we tried. We were surprised by how high we the dropout probability could go before accuracy started to decrease.}\label{acc_vs_dropout_prob}
     \end{figure}
     After trying this model, we experimented with increasing the number of hidden units in some of the layers, and found that we had better performance when increasing the number of units in the first layer to 1000. Our most successful submission was the resulting architecture trained as follows: We trained the network for 20 epochs with a batch size of 64, using the \texttt{rmsprop} optimizer and \texttt{binary\_crossentropy} as our loss function. 
@@ -132,10 +132,15 @@
   $$
   \text{accuracy}=\frac{\text{\# of matches}}{\text{\# of datapoints}}.
   $$
-  When training with cross-validation, accuracy scores were averaged across folds. Our initial experiments with logistic regression set a baseline $\sim 84$\% accuracy. 
+  When training with cross-validation, accuracy scores were averaged across folds. Our initial experiments with logistic regression set a baseline $\sim 84$\% accuracy. For example, see Fig. \ref{acc} for an example of parameter vs. accuracy plot. In this case we were seeking the optimal regularization strength $C$ for a simple logistic regression model. Each of our models was validated this way in order to determine the highest performing parameters
+    
 \item \textbf{Validation and Test} 
-  We set aside 5\% (1000 datapoints) of the training set to validate our models, separate from in-sample cross-validation during training. Scores from this validation step generally tracked closely to those subsequently attained on the public leaderboard. 
-  
+  We set aside 5\% (1000 datapoints) of the training set for a fixed random seed to validate our models, separate from in-sample cross-validation during training. Scores from this validation step generally tracked closely to those subsequently attained on the public leaderboard.
+    \begin{figure}[h]
+  	\centering
+  	\includegraphics[width=0.7\textwidth]{acc.eps}
+  	\caption{Regularization strength $C$ vs. model accuracy for Logistic Regression}\label{acc}
+  \end{figure}
 \end{itemize}
 
 
@@ -145,13 +150,13 @@
 \begin{itemize}
   
 \item \textbf{Discoveries} 
-  We discovered that despite trying and optimizing numerous regression models, model ensembles, and hyperparameters, a neural network still gave the (marginally) best performance. It was also surprising that simple logistic regression performed nearly as well on this dataset. 
+  We discovered that despite trying and optimizing numerous regression models, model ensembles, and hyperparameters, a neural network still gave the (marginally) best performance. It was also surprising that simple logistic regression performed nearly as well on this dataset. Another crucial point was that tuning hyperparameters was \textit{the} crucial aspect of achieving good classification performance. In hw and lecture, this is not something we had to work with too much, especially w.r.t. the preferred amount of regularization. 
   
 \item \textbf{Challenges} 
-  Avoiding overfitting to the public leaderboard was on our mind as we validated the models. By setting aside 5\% of our training set to validate our model accuracy after training, we had a point of reference for the leaderboard score. Otherwise, establishing the neural net architecture was a process that felt like a lot of trial and error. Given the number of possible structures and parameter values that are available to a neural net, it seemed like we might have landed upon something that worked well by luck. Doing this again, we would spend more time systematically testing different model structures (number of layers, activation functions, number of units per hidden layer, etc.), or alternatively considering ensembles of shallow neural nets. 
+  Avoiding overfitting to the public leaderboard was on our mind as we validated the models. By setting aside 5\% of our training set to validate our model accuracy after training, we had a point of reference for the leaderboard score. Otherwise, establishing the neural net architecture was a process that felt like a lot of trial and error. Given the number of possible structures and parameter values that are available to a neural net, it seemed like we might have landed upon something that worked well partially by luck. Doing this again, we would spend more time systematically testing different model structures (number of layers, activation functions, number of units per hidden layer, etc.), or alternatively considering ensembles of shallow neural nets. 
   
 \item \textbf{Concluding Remarks} 
-  An interesting feature of this project was that there seemed to be a fundamental limit on the performance of machine-learned models on this dataset. The scoreboard results were all clustered within a couple percentage points around 85\%. We found that most models we tried would approach this ceiling after tuning hyperparameters; in other words, the learning limit of the data seemed to be model independent. 
+  An interesting feature of this project was that there seemed to be a fundamental limit on the performance of machine-learned models on this dataset. The scoreboard results were all clustered within a couple percentage points around 85\%. We found that most models we tried would approach this ceiling after tuning hyperparameters; in other words, the learning limit of the data seemed to be model independent. (Note that this clustering does not prove anything about the existence of such a limit though.)
   
 \end{itemize}
 
@@ -162,6 +167,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% START_BIBLIOGRAPHY%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \medskip
+\nocite*
 \bibliographystyle{unsrt}
 \bibliography{biblio}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END_BIBLIOGRAPHY%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
